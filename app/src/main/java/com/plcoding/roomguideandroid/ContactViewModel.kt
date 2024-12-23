@@ -37,9 +37,22 @@ class ContactViewModel(
                     dao.deleteContact(event.contact)
                 }
             }
+           is ContactEvent.UpdateContact ->{
+                viewModelScope.launch {
+                    _state.update { it.copy(
+                            isAddingContact = true,
+                            contactToEdit = event.contact, // Set the contact being edited
+                            firstName = event.contact.firstName,
+                            lastName = event.contact.lastName,
+                            phoneNumber = event.contact.phoneNumber
+                        )
+                    }
+                    dao.updateContact(event.contact)
+                }
+            }
             ContactEvent.HideDialog -> {
                 _state.update { it.copy(
-                    isAddingContact = false
+                    isAddingContact = false,
                 ) }
             }
             ContactEvent.SaveContact -> {

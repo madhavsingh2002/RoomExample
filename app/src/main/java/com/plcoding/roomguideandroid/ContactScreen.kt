@@ -10,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -81,6 +82,14 @@ fun ContactScreen(
                             fontSize = 20.sp
                         )
                         Text(text = contact.phoneNumber, fontSize = 12.sp)
+                    }
+                    IconButton(onClick = {
+                        onEvent(ContactEvent.UpdateContact(contact))
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Notifications,
+                            contentDescription = "update"
+                        )
                     }
                     IconButton(onClick = {
                         onEvent(ContactEvent.DeleteContact(contact))

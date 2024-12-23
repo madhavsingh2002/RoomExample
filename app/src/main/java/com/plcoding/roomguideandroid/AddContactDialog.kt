@@ -19,12 +19,15 @@ fun AddContactDialog(
     onEvent: (ContactEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val isUpdating = state.contactToEdit != null
     AlertDialog(
         modifier = modifier,
         onDismissRequest = {
             onEvent(ContactEvent.HideDialog)
         },
-        title = { Text(text = "Add contact") },
+        title = {
+            Text(text = if (isUpdating) "Update contact" else "Add contact")
+        },
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -64,9 +67,25 @@ fun AddContactDialog(
                 contentAlignment = Alignment.CenterEnd
             ) {
                 Button(onClick = {
-                    onEvent(ContactEvent.SaveContact)
+                    if (isUpdating) {
+                        state.contactToEdit?.let { contact ->
+                            onEvent(
+                                ContactEvent.UpdateContact(
+                                    contact.copy(
+                                        firstName = state.firstName,
+                                        lastName = state.lastName,
+                                        phoneNumber = state.phoneNumber
+                                    )
+                                )
+                            )
+                        }
+                        onEvent(ContactEvent.HideDialog)
+                    } else {
+                        onEvent(ContactEvent.SaveContact)
+                    }
+                   // onEvent(ContactEvent.HideDialog)
                 }) {
-                    Text(text = "Save")
+                    Text(text = if (isUpdating) "Update" else "Save")
                 }
             }
         }
